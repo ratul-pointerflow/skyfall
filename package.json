@@ -1,5 +1,5 @@
 {
-  "name": "trendyfy",
+  "name": "skyfall",
   "private": true,
   "sideEffects": false,
   "version": "2024.7.3",
@@ -18,11 +18,14 @@
     "@remix-run/server-runtime": "^2.10.1",
     "@shopify/hydrogen": "2024.7.2",
     "@shopify/remix-oxygen": "^2.0.5",
+    "bootstrap": "^5.3.3",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
     "isbot": "^3.8.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-bootstrap": "^2.10.4",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.2.1"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.2",
@@ -45,6 +48,6 @@
     "vite-tsconfig-paths": "^4.3.1"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   }
 }
