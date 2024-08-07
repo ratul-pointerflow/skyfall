@@ -16,6 +16,8 @@ import TopFooter from './layout/TopFooter';
 import Footer from './layout/Footer';
 import TopBar from './layout/TopBar';
 import Header from './layout/Header';
+import HomeBanner from './sections/HomeBanner';
+import Paralex from './sections/Paralex';
 
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
@@ -41,7 +43,9 @@ export function PageLayout({
       <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
       <TopBar />
       <Header />
+      <HomeBanner />
       <main>{children}</main>
+      <Paralex />
       <TopFooter />
       <Footer />
     </Aside.Provider>

@@ -12,9 +12,9 @@ import {
 import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
 import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import favicon from '~/assets/favicon.svg';
-import bootstrapStyles from 'bootstrap/dist/css/bootstrap.min.css';
 import {PageLayout} from '~/components/PageLayout';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
+import bootStyles from 'bootstrap/dist/css/bootstrap.min.css';
 import appStyles from '~/styles/app.css?url';
 import customStyles from '~/styles/custom.css?url';
 
@@ -43,7 +43,7 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
 
 export function links() {
   return [
-    {rel: 'stylesheet', href: bootstrapStyles},
+    {rel: 'stylesheet', href: bootStyles},
     {rel: 'stylesheet', href: appStyles},
     {rel: 'stylesheet', href: appStyles},
     {rel: 'stylesheet', href: customStyles},

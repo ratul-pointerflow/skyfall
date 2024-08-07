@@ -1830,7 +1830,7 @@ nav .main-menu li a::before {
 }
 
 .paralex-section {
-    background-image: url("../images/bgimg.png");
+    background-image: url("./../../public/images/bgimg.png");
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
