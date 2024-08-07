@@ -14,7 +14,8 @@ import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import favicon from '~/assets/favicon.svg';
 import {PageLayout} from '~/components/PageLayout';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
-import bootStyles from 'bootstrap/dist/css/bootstrap.min.css';
+import bootStyles from '~/styles/bootstrap.min.css?url';
+import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import customStyles from '~/styles/custom.css?url';
 
@@ -44,7 +45,7 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
 export function links() {
   return [
     {rel: 'stylesheet', href: bootStyles},
-    {rel: 'stylesheet', href: appStyles},
+    {rel: 'stylesheet', href: resetStyles},
     {rel: 'stylesheet', href: appStyles},
     {rel: 'stylesheet', href: customStyles},
     {
