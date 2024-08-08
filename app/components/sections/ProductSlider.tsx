@@ -1,291 +1,93 @@
-import { json, useLoaderData } from '@remix-run/react';
-import request from 'graphql-request';
-import React, { useEffect } from 'react'
-import { GET_PRODUCTS } from '~/queries/queries';
 
-type ProductImage = {
-    src: string;
-    altText: string;
+import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+import { Await, Link } from "@remix-run/react";
+import { Suspense, useEffect } from "react";
+import { RecommendedProductsQuery } from "storefrontapi.generated";
+import "swiper/css";
+import { Navigation } from "swiper/modules";
+import ProductCard from "../common/ProductCard";
+
+
+var productSlider = {
+    slidesPerView: 1,
+    spaceBetween: 0,
+    draggable: true,
+    navigation: {
+        prevEl: '.swiper-button-prev',
+        nextEl: '.swiper-button-next',
+    },
+    breakpoints: {
+        516: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+        },
+        993: {
+            slidesPerView: 3,
+            spaceBetween: 25,
+        },
+        1200: {
+            slidesPerView: 4,
+            spaceBetween: 25,
+        },
+    },
 };
 
-type Product = {
-    id: string;
-    title: string;
-    description: string;
-    images: {
-        edges: { node: ProductImage }[];
-    };
-};
+interface productSliderProps {
+    products: any[];
+}
 
-type LoaderData = {
-    products: {
-        edges: { node: Product }[];
-    };
-};
-
-export const loader = async () => {
-    const endpoint = 'https://mock.shopify.com/api/graphql';
-    const data = await request(endpoint, GET_PRODUCTS);
-    return json({ data });
-};
-
-export default function ProductSlider() {
-    const data = useLoaderData<LoaderData | null>();
-
-    useEffect(() => {
-        console.log(data);
-    }, [])
-
+export default function ProductSlider({ products }: { products: Promise<RecommendedProductsQuery | null>; }) {
+    
     return (
-        <section className="slider-section py-150 wow fadeInUp" data-wow-delay=".2s">
-            <div className="container">
-                <div className="slider-top">
-                    <div className="slider-top-content">
-                        <span>Comfort Every Day</span>
-                        <h3>Best sellers</h3>
-                    </div>
-                </div>
-                <div className="row tastimonial-slider">
-                    {/*  card 1 */}
-                    <div className="single-slider">
-                        <div className="slider-head">
-                            <div className="slider-img">
-                                <img src="/images/image.png" alt="image" />
-                            </div>
-                            <a href="product_details.html">
-                                <div className="cart">
-                                    <span><i className="fa-solid fa-plus"></i></span>
-                                </div>
-                            </a>
-                            <div className="sale">
-                                <span>Sale</span>
-                            </div>
+        <section className='best_selling_section'>
+            <div className='container'>
+                <div className="swiper best_selling_slider">
+                    <div className="swiper_top_box">
+                        <div className="swiper_headings">
+                            <span>Comfort Every Day</span>
+                            <h3>Best sellers</h3>
                         </div>
-                        <div className="slider-body mt-20">
-                            <div className="slider-body-content">
-                                <h6 className="slider-title">Shirt with Long Sleeves</h6>
-                                <div className="dreass-color mt-10">
-                                    <div className="red"></div>
-                                    <div className="blue"></div>
-                                    <div className="black"></div>
-                                </div>
+
+                        <div className="swiper_controller">
+                            <div className="swiper-button-prev">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25">
+                                    <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"></path>
+                                </svg>
                             </div>
-                            <div className="slider-body-content-right">
-                                <del>$250.00</del>
-                                <h6 className="">$250.00</h6>
+                            <div className="swiper-button-next">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25">
+                                    <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z">
+                                    </path>
+                                </svg>
                             </div>
                         </div>
                     </div>
-                    {/*  card 2 */}
-                    <div className="single-slider">
-                        <div className="slider-head">
-                            <div className="slider-img">
-                                <img src="/images/image1.png" alt="image" />
-                            </div>
-                            <a href="product_details.html">
-                                <div className="cart">
-                                    <span><i className="fa-solid fa-plus"></i></span>
-                                </div>
-                            </a>
-                            <div className="sale">
-                                <span>Sale</span>
-                            </div>
-                        </div>
-                        <div className="slider-body mt-20">
-                            <div className="slider-body-content">
-                                <h6 className="slider-title">Shirt with Long Sleeves</h6>
-                                <div className="dreass-color mt-10">
-                                    <div className="red"></div>
-                                    <div className="blue"></div>
-                                    <div className="black"></div>
-                                </div>
-                            </div>
-                            <div className="slider-body-content-right">
-                                <del>$250.00</del>
-                                <h6 className="">$250.00</h6>
-                            </div>
-                        </div>
-                    </div>
-                    {/*  card 3 */}
-                    <div className="single-slider">
-                        <div className="slider-head">
-                            <div className="slider-img">
-                                <img src="/images/image2.png" alt="image" />
-                            </div>
-                            <a href="product_details.html">
-                                <div className="cart">
-                                    <span><i className="fa-solid fa-plus"></i></span>
-                                </div>
-                            </a>
-                            <div className="sale">
-                                <span>Sale</span>
-                            </div>
-                        </div>
-                        <div className="slider-body mt-20">
-                            <div className="slider-body-content">
-                                <h6 className="slider-title">Shirt with Long Sleeves</h6>
-                                <div className="dreass-color mt-10">
-                                    <div className="red"></div>
-                                    <div className="blue"></div>
-                                    <div className="black"></div>
-                                </div>
-                            </div>
-                            <div className="slider-body-content-right">
-                                <del>$250.00</del>
-                                <h6 className="">$250.00</h6>
-                            </div>
-                        </div>
-                    </div>
-                    {/*  card 4 */}
-                    <div className="single-slider">
-                        <div className="slider-head">
-                            <div className="slider-img">
-                                <img src="/images/image3.png" alt="image" />
-                            </div>
-                            <a href="product_details.html">
-                                <div className="cart">
-                                    <span><i className="fa-solid fa-plus"></i></span>
-                                </div>
-                            </a>
-                            <div className="sale">
-                                <span>Sale</span>
-                            </div>
-                        </div>
-                        <div className="slider-body mt-20">
-                            <div className="slider-body-content">
-                                <h6 className="slider-title">Shirt with Long Sleeves</h6>
-                                <div className="dreass-color mt-10">
-                                    <div className="red"></div>
-                                    <div className="blue"></div>
-                                    <div className="black"></div>
-                                </div>
-                            </div>
-                            <div className="slider-body-content-right">
-                                <del>$250.00</del>
-                                <h6 className="">$250.00</h6>
-                            </div>
-                        </div>
-                    </div>
-                    {/*  card 1 */}
-                    <div className="single-slider">
-                        <div className="slider-head">
-                            <div className="slider-img">
-                                <img src="/images/image.png" alt="image" />
-                            </div>
-                            <a href="product_details.html">
-                                <div className="cart">
-                                    <span><i className="fa-solid fa-plus"></i></span>
-                                </div>
-                            </a>
-                            <div className="sale">
-                                <span>Sale</span>
-                            </div>
-                        </div>
-                        <div className="slider-body mt-20">
-                            <div className="slider-body-content">
-                                <h6 className="slider-title">Shirt with Long Sleeves</h6>
-                                <div className="dreass-color mt-10">
-                                    <div className="red"></div>
-                                    <div className="blue"></div>
-                                    <div className="black"></div>
-                                </div>
-                            </div>
-                            <div className="slider-body-content-right">
-                                <del>$250.00</del>
-                                <h6 className="">$250.00</h6>
-                            </div>
-                        </div>
-                    </div>
-                    {/*  card 2 */}
-                    <div className="single-slider">
-                        <div className="slider-head">
-                            <div className="slider-img">
-                                <img src="/images/image1.png" alt="image" />
-                            </div>
-                            <a href="product_details.html">
-                                <div className="cart">
-                                    <span><i className="fa-solid fa-plus"></i></span>
-                                </div>
-                            </a>
-                            <div className="sale">
-                                <span>Sale</span>
-                            </div>
-                        </div>
-                        <div className="slider-body mt-20">
-                            <div className="slider-body-content">
-                                <h6 className="slider-title">Shirt with Long Sleeves</h6>
-                                <div className="dreass-color mt-10">
-                                    <div className="red"></div>
-                                    <div className="blue"></div>
-                                    <div className="black"></div>
-                                </div>
-                            </div>
-                            <div className="slider-body-content-right">
-                                <del>$250.00</del>
-                                <h6 className="">$250.00</h6>
-                            </div>
-                        </div>
-                    </div>
-                    {/*  card 3 */}
-                    <div className="single-slider">
-                        <div className="slider-head">
-                            <div className="slider-img">
-                                <img src="/images/image2.png" alt="image" />
-                            </div>
-                            <a href="product_details.html">
-                                <div className="cart">
-                                    <span><i className="fa-solid fa-plus"></i></span>
-                                </div>
-                            </a>
-                            <div className="sale">
-                                <span>Sale</span>
-                            </div>
-                        </div>
-                        <div className="slider-body mt-20">
-                            <div className="slider-body-content">
-                                <h6 className="slider-title">Shirt with Long Sleeves</h6>
-                                <div className="dreass-color mt-10">
-                                    <div className="red"></div>
-                                    <div className="blue"></div>
-                                    <div className="black"></div>
-                                </div>
-                            </div>
-                            <div className="slider-body-content-right">
-                                <del>$250.00</del>
-                                <h6 className="">$250.00</h6>
-                            </div>
-                        </div>
-                    </div>
-                    {/*  card 4 */}
-                    <div className="single-slider">
-                        <div className="slider-head">
-                            <div className="slider-img">
-                                <img src="/images/image3.png" alt="image" />
-                            </div>
-                            <a href="product_details.html">
-                                <div className="cart">
-                                    <span><i className="fa-solid fa-plus"></i></span>
-                                </div>
-                            </a>
-                            <div className="sale">
-                                <span>Sale</span>
-                            </div>
-                        </div>
-                        <div className="slider-body mt-20">
-                            <div className="slider-body-content">
-                                <h6 className="slider-title">Shirt with Long Sleeves</h6>
-                                <div className="dreass-color mt-10">
-                                    <div className="red"></div>
-                                    <div className="blue"></div>
-                                    <div className="black"></div>
-                                </div>
-                            </div>
-                            <div className="slider-body-content-right">
-                                <del>$250.00</del>
-                                <h6 className="">$250.00</h6>
-                            </div>
-                        </div>
-                    </div>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Await resolve={products}>
+                            {(response) => (
+                                <Swiper
+                                    className="swiper-wrapper"
+                                    modules={[Navigation]}
+                                    {...productSlider}
+                                >
+                                    {response ? response.products.nodes.map((product, index) => (
+                                        <SwiperSlide className="swiper-slide" key={index}>
+                                            <ProductCard 
+                                                id={product.id} 
+                                                title={product.title} 
+                                                handle={product.handle} 
+                                                tags={product.tags} 
+                                                priceRange={product.priceRange} 
+                                                images={product.images.nodes[0]}  
+                                            />
+                                        </SwiperSlide>
+                                    )) : null}
+                                </Swiper>
+                            )}
+                        </Await>
+                    </Suspense>
                 </div>
             </div>
         </section>

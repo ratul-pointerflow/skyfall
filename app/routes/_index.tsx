@@ -1,14 +1,17 @@
-import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Await, useLoaderData, Link, type MetaFunction} from '@remix-run/react';
-import {Suspense} from 'react';
-import {Image, Money} from '@shopify/hydrogen';
+import { defer, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import { Await, useLoaderData, Link, type MetaFunction } from '@remix-run/react';
+import { Suspense } from 'react';
+import { Image, Money } from '@shopify/hydrogen';
 import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
 } from 'storefrontapi.generated';
+import HomeBanner from '~/components/sections/HomeBanner';
+import Paralex from '~/components/sections/Paralex';
+import ProductSlider from '~/components/sections/ProductSlider';
 
 export const meta: MetaFunction = () => {
-  return [{title: 'Hydrogen | Home'}];
+  return [{ title: 'Hydrogen | Home' }];
 };
 
 export async function loader(args: LoaderFunctionArgs) {
@@ -18,15 +21,15 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return defer({...deferredData, ...criticalData});
+  return defer({ ...deferredData, ...criticalData });
 }
 
 /**
  * Load data necessary for rendering content above the fold. This is the critical data
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
-async function loadCriticalData({context}: LoaderFunctionArgs) {
-  const [{collections}] = await Promise.all([
+async function loadCriticalData({ context }: LoaderFunctionArgs) {
+  const [{ collections }] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
     // Add other queries here, so that they are loaded in parallel
   ]);
@@ -41,7 +44,7 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
  * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
-function loadDeferredData({context}: LoaderFunctionArgs) {
+function loadDeferredData({ context }: LoaderFunctionArgs) {
   const recommendedProducts = context.storefront
     .query(RECOMMENDED_PRODUCTS_QUERY)
     .catch((error) => {
@@ -59,8 +62,11 @@ export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
     <div className="home">
-      <FeaturedCollection collection={data.featuredCollection} />
-      <RecommendedProducts products={data.recommendedProducts} />
+      {/* <FeaturedCollection collection={data.featuredCollection} />
+      <RecommendedProducts products={data.recommendedProducts} /> */}
+      <HomeBanner />
+      <ProductSlider products={data.recommendedProducts} />
+      <Paralex />
     </div>
   );
 }
@@ -101,22 +107,22 @@ function RecommendedProducts({
             <div className="recommended-products-grid">
               {response
                 ? response.products.nodes.map((product) => (
-                    <Link
-                      key={product.id}
-                      className="recommended-product"
-                      to={`/products/${product.handle}`}
-                    >
-                      <Image
-                        data={product.images.nodes[0]}
-                        aspectRatio="1/1"
-                        sizes="(min-width: 45em) 20vw, 50vw"
-                      />
-                      <h4>{product.title}</h4>
-                      <small>
-                        <Money data={product.priceRange.minVariantPrice} />
-                      </small>
-                    </Link>
-                  ))
+                  <Link
+                    key={product.id}
+                    className="recommended-product"
+                    to={`/products/${product.handle}`}
+                  >
+                    <Image
+                      data={product.images.nodes[0]}
+                      aspectRatio="1/1"
+                      sizes="(min-width: 45em) 20vw, 50vw"
+                    />
+                    <h4>{product.title}</h4>
+                    <small>
+                      <Money data={product.priceRange.minVariantPrice} />
+                    </small>
+                  </Link>
+                ))
                 : null}
             </div>
           )}
@@ -154,9 +160,15 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   fragment RecommendedProduct on Product {
     id
     title
+    descriptionHtml
     handle
+    tags
     priceRange {
       minVariantPrice {
+        amount
+        currencyCode
+      }
+      maxVariantPrice {
         amount
         currencyCode
       }
@@ -173,7 +185,7 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   }
   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
+    products(first: 10, sortKey: UPDATED_AT, reverse: true) {
       nodes {
         ...RecommendedProduct
       }

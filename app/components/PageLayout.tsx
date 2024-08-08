@@ -43,9 +43,7 @@ export function PageLayout({
       <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
       <TopBar />
       <Header />
-      <HomeBanner />
       <main>{children}</main>
-      <Paralex />
       <TopFooter />
       <Footer />
     </Aside.Provider>
