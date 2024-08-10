@@ -18,6 +18,8 @@ import bootStyles from '~/styles/bootstrap.min.css?url';
 import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import customStyles from '~/styles/custom.css?url';
+import "swiper/css";
+
 
 export type RootLoader = typeof loader;
 

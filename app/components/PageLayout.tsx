@@ -42,7 +42,7 @@ export function PageLayout({
       <SearchAside />
       <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
       <TopBar />
-      <Header />
+      <Header header={header} cart={cart} isLoggedIn={isLoggedIn} publicStoreDomain={publicStoreDomain}/>
       <main>{children}</main>
       <TopFooter />
       <Footer />

@@ -9,6 +9,17 @@ import type {
 import HomeBanner from '~/components/sections/HomeBanner';
 import Paralex from '~/components/sections/Paralex';
 import ProductSlider from '~/components/sections/ProductSlider';
+import CollectionGrid from '~/components/sections/CollectionGrid';
+import Discount from '~/components/sections/Discount';
+import Video from '~/components/sections/Video';
+import FeaturedCollectionSlider from '~/components/sections/FeaturedCollectionSlider';
+import ImageWithText from '~/components/sections/ImageWithText';
+import Reviews from '~/components/sections/Reviews';
+import Discover from '~/components/sections/Discover';
+import Faq from '~/components/sections/Faq';
+import Newsletter from '~/components/sections/Newsletter';
+import FeaturedBlogs from '~/components/sections/FeaturedBlogs';
+import Gellary from '~/components/sections/Gellary';
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Hydrogen | Home' }];
@@ -31,7 +42,6 @@ export async function loader(args: LoaderFunctionArgs) {
 async function loadCriticalData({ context }: LoaderFunctionArgs) {
   const [{ collections }] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
-    // Add other queries here, so that they are loaded in parallel
   ]);
 
   return {
@@ -62,73 +72,22 @@ export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
     <div className="home">
-      {/* <FeaturedCollection collection={data.featuredCollection} />
-      <RecommendedProducts products={data.recommendedProducts} /> */}
       <HomeBanner />
-      <ProductSlider products={data.recommendedProducts} />
+      <ProductSlider products={data.recommendedProducts} sectionNumber={1} />
       <Paralex />
-    </div>
-  );
-}
-
-function FeaturedCollection({
-  collection,
-}: {
-  collection: FeaturedCollectionFragment;
-}) {
-  if (!collection) return null;
-  const image = collection?.image;
-  return (
-    <Link
-      className="featured-collection"
-      to={`/collections/${collection.handle}`}
-    >
-      {image && (
-        <div className="featured-collection-image">
-          <Image data={image} sizes="100vw" />
-        </div>
-      )}
-      <h1>{collection.title}</h1>
-    </Link>
-  );
-}
-
-function RecommendedProducts({
-  products,
-}: {
-  products: Promise<RecommendedProductsQuery | null>;
-}) {
-  return (
-    <div className="recommended-products">
-      <h2>Recommended Products</h2>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Await resolve={products}>
-          {(response) => (
-            <div className="recommended-products-grid">
-              {response
-                ? response.products.nodes.map((product) => (
-                  <Link
-                    key={product.id}
-                    className="recommended-product"
-                    to={`/products/${product.handle}`}
-                  >
-                    <Image
-                      data={product.images.nodes[0]}
-                      aspectRatio="1/1"
-                      sizes="(min-width: 45em) 20vw, 50vw"
-                    />
-                    <h4>{product.title}</h4>
-                    <small>
-                      <Money data={product.priceRange.minVariantPrice} />
-                    </small>
-                  </Link>
-                ))
-                : null}
-            </div>
-          )}
-        </Await>
-      </Suspense>
-      <br />
+      <CollectionGrid />
+      <Discount />
+      <ProductSlider products={data.recommendedProducts} sectionNumber={2} />
+      <Video />
+      <FeaturedCollectionSlider products={data.recommendedProducts} sectionNumber={1} />
+      <ProductSlider products={data.recommendedProducts} sectionNumber={3} />
+      <ImageWithText />
+      <Reviews sectionNumber={1} />
+      <Discover />
+      <Faq />
+      <Newsletter />
+      <FeaturedBlogs />
+      <Gellary />
     </div>
   );
 }
@@ -188,6 +147,47 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
     products(first: 10, sortKey: UPDATED_AT, reverse: true) {
       nodes {
         ...RecommendedProduct
+      }
+    }
+  }
+` as const;
+
+const COLLECTION_BY_NAME_QUERY = `#graphql
+  fragment CollectionProduct on Product {
+    id
+    title
+    descriptionHtml
+    handle
+    tags
+    priceRange {
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+      maxVariantPrice {
+        amount
+        currencyCode
+      }
+    }
+    images(first: 1) {
+      nodes {
+        id
+        url
+        altText
+        width
+        height
+      }
+    }
+  }
+  query CollectionByName($collectionHandle: String!, $country: CountryCode, $language: LanguageCode) 
+    @inContext(country: $country, language: $language) {
+    collection(handle: $collectionHandle) {
+      title
+      handle
+      products(first: 10, sortKey: UPDATED_AT, reverse: true) {
+        nodes {
+          ...CollectionProduct
+        }
       }
     }
   }

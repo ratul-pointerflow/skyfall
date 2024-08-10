@@ -31,7 +31,9 @@ export default function ProductCard(product: Product) {
                         </ul>
                     </div>
                     <div className="right_box">
-                        <h4 className="old_price">${product?.priceRange?.maxVariantPrice?.amount}</h4>
+                        {product?.priceRange?.maxVariantPrice?.amount > product.priceRange.minVariantPrice.amount ? (
+                            <h4 className="old_price">${product?.priceRange?.maxVariantPrice?.amount}</h4>
+                        ) : null}
                         <h3 className="current_price">${product.priceRange.minVariantPrice.amount}</h3>
                     </div>
                 </div>
